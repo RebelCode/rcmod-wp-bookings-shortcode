@@ -15,9 +15,11 @@ class WpBookingsShortcode extends AbstractBaseModule
      * @param $key
      * @param $containerFactory
      *
+     * @param $eventManager
+     * @param $eventFactory
      * @throws \Dhii\Exception\InternalException
      */
-    public function __construct($key, $containerFactory)
+    public function __construct($key, $containerFactory, $eventManager, $eventFactory)
     {
         $this->_initModule(
             $containerFactory,
@@ -25,6 +27,8 @@ class WpBookingsShortcode extends AbstractBaseModule
             ['wp_bookings_front_ui'],
             $this->_loadPhpConfigFile(RC_WP_BOOKINGS_SHORTCODE_MODULE_CONFIG)
         );
+
+        $this->_initModuleEvents($eventManager, $eventFactory);
     }
 
     /**
@@ -44,8 +48,9 @@ class WpBookingsShortcode extends AbstractBaseModule
      */
     public function run(ContainerInterface $c = null)
     {
-        add_shortcode($this->_getConfig()['shortcode_tag'], function () use ($c) {
-            return $c->get('wp_bookings_front_ui')->render();
+        add_shortcode($this->_getConfig()['shortcode_tag'], function ($attrs) use ($c) {
+            $attrs = $attrs ? $attrs : [];
+            return $c->get('wp_bookings_front_ui')->render($attrs);
         });
 
         $this->eventManager->attach('wp_enqueue_scripts', function () use ($c) {
