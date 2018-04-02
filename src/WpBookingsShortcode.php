@@ -54,7 +54,11 @@ class WpBookingsShortcode extends AbstractBaseModule
         });
 
         $this->eventManager->attach('wp_enqueue_scripts', function () use ($c) {
-            return $c->get('wp_bookings_front_ui')->enqueueAssets();
+            if (!is_a(get_post(), 'WP_Post') || !has_shortcode(get_post()->post_content, $this->_getConfig()['shortcode_tag'])) {
+                return;
+            }
+
+            $c->get('wp_bookings_front_ui')->enqueueAssets();
         });
     }
 }
