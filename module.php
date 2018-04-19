@@ -9,7 +9,10 @@ define('RC_WP_BOOKINGS_SHORTCODE_MODULE_KEY', 'wp_bookings_shortcode');
 return function(ContainerInterface $c) {
     return new WpBookingsShortcode(
         RC_WP_BOOKINGS_SHORTCODE_MODULE_KEY,
+        ['wp_bookings_front_ui'],
+        $c->get('config_factory'),
         $c->get('container_factory'),
+        $c->get('composite_container_factory'),
         $c->get('event_manager'),
         $c->get('event_factory')
     );
