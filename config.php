@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'shortcode_tag' => 'eddbk-order-wizard'
+    'shortcode_tag' => 'eddbk'
 ];
