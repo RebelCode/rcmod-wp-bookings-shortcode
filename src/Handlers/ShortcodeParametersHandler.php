@@ -148,7 +148,7 @@ class ShortcodeParametersHandler implements InvocableInterface
 
         $condition = $b->and(
             $b->eq(
-                $b->var('p'),
+                $b->ef('service', 'id'),
                 $b->lit($serviceId)
             )
         );
