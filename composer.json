@@ -19,7 +19,10 @@
         "phpunit/phpunit": "^4.8",
         "ptrofimov/xpmock": "^1.1",
         "dhii/php-cs-fixer-config": "^0.1",
-        "codeclimate/php-test-reporter": "<=0.3.2"
+        "codeclimate/php-test-reporter": "<=0.3.2",
+        "dhii/cqrs-resource-model-interface": "0.1-alpha2",
+        "dhii/expression-interface": "^0.2",
+        "dhii/transformer-interface": "^0.1-alpha1"
     },
     "autoload": {
         "psr-4": {
