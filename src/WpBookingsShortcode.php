@@ -7,6 +7,7 @@ use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersHandler;
+use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersTransformHandler;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
 
@@ -62,12 +63,12 @@ class WpBookingsShortcode extends AbstractBaseModule
     {
         return $this->_setupContainer($this->_loadPhpConfigFile(RC_WP_BOOKINGS_SHORTCODE_MODULE_CONFIG), [
             /*
-             * Handles shortcode parameters before sending them to client.
+             * Transform shortcode parameters before sending them to client.
              *
              * @since [*next-version*]
              */
-            'eddbk_shortcode_parameters_handler' => function (ContainerInterface $c) {
-                return new ShortcodeParametersHandler(
+            'eddbk_shortcode_parameters_transform_handler' => function (ContainerInterface $c) {
+                return new ShortcodeParametersTransformHandler(
                     $c->get('eddbk_shortcode/edd_settings/purchase_page'),
                     $c->get('eddbk_services_select_rm'),
                     $c->get('sql_expression_builder'),
@@ -86,11 +87,13 @@ class WpBookingsShortcode extends AbstractBaseModule
     {
         $this->shortcodeTag = $c->get('eddbk_shortcode/shortcode_tag');
 
-        $this->_attach('eddbk_shortcode_parameters', $c->get('eddbk_shortcode_parameters_handler'));
+        $this->_attach('eddbk_shortcode_parameters_transform', $c->get('eddbk_shortcode_parameters_transform_handler'));
 
         add_shortcode($this->shortcodeTag, function ($attrs) {
             $attrs = $attrs ? $attrs : [];
-            $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs)->getParams();
+            $this->_trigger('eddbk_shortcode_parameters', $attrs);
+
+            $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
 
             return $this->_trigger('eddbk_wizard_main_component', $attrs)->getParam('content');
         });

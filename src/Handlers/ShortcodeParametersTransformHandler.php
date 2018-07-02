@@ -12,11 +12,11 @@ use RebelCode\Expression\Builder\ExpressionBuilderInterface;
 use stdClass;
 
 /**
- * Handler for rendering main application component's container.
+ * Handler for transforming shortcode parameters in format required by the front ui application.
  *
  * @since [*next-version*]
  */
-class ShortcodeParametersHandler implements InvocableInterface
+class ShortcodeParametersTransformHandler implements InvocableInterface
 {
     /* @since [*next-version*] */
     use StringTranslatingTrait;
