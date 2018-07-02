@@ -10,6 +10,7 @@ use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersTransformHandler;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
+use WP_Post;
 
 /**
  * Handler for bookings shortcode that will insert client application
@@ -125,6 +126,7 @@ class WpBookingsShortcode extends AbstractBaseModule
      */
     protected function _shouldRenderShortcodeContent()
     {
-        return is_a(get_post(), 'WP_Post') && has_shortcode(get_post()->post_content, $this->shortcodeTag);
+        $post = get_post();
+        return $post instanceof WP_Post && has_shortcode($post->post_content, $this->shortcodeTag);
     }
 }
