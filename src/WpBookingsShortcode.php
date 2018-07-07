@@ -90,7 +90,7 @@ class WpBookingsShortcode extends AbstractBaseModule
         $this->_attach('eddbk_shortcode_parameters_transform', $c->get('eddbk_shortcode_parameters_transform_handler'));
 
         add_shortcode($this->shortcodeTag, function ($attrs) {
-            $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : []);
+            $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : [])->getParams();
 
             $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
 
