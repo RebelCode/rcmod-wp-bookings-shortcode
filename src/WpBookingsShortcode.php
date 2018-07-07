@@ -6,7 +6,6 @@ use Dhii\Data\Container\ContainerFactoryInterface;
 use Dhii\Event\EventFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventManager\EventManagerInterface;
-use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersHandler;
 use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersTransformHandler;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
@@ -91,8 +90,7 @@ class WpBookingsShortcode extends AbstractBaseModule
         $this->_attach('eddbk_shortcode_parameters_transform', $c->get('eddbk_shortcode_parameters_transform_handler'));
 
         add_shortcode($this->shortcodeTag, function ($attrs) {
-            $attrs = $attrs ? $attrs : [];
-            $this->_trigger('eddbk_shortcode_parameters', $attrs);
+            $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : []);
 
             $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
 
@@ -127,6 +125,7 @@ class WpBookingsShortcode extends AbstractBaseModule
     protected function _shouldRenderShortcodeContent()
     {
         $post = get_post();
+
         return $post instanceof WP_Post && has_shortcode($post->post_content, $this->shortcodeTag);
     }
 }
