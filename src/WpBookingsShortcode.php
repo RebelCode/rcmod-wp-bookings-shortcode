@@ -9,7 +9,6 @@ use Psr\EventManager\EventManagerInterface;
 use RebelCode\Bookings\WordPress\Module\Handlers\ShortcodeParametersTransformHandler;
 use RebelCode\Modular\Module\AbstractBaseModule;
 use Dhii\Util\String\StringableInterface as Stringable;
-use WP_Post;
 
 /**
  * Handler for bookings shortcode that will insert client application
@@ -86,46 +85,19 @@ class WpBookingsShortcode extends AbstractBaseModule
     public function run(ContainerInterface $c = null)
     {
         $this->shortcodeTag = $c->get('eddbk_shortcode/shortcode_tag');
+        $wizardBlockFactory = $c->get('eddbk_wizard_block_factory');
 
         $this->_attach('eddbk_shortcode_parameters_transform', $c->get('eddbk_shortcode_parameters_transform_handler'));
 
-        add_shortcode($this->shortcodeTag, function ($attrs) {
+        add_shortcode($this->shortcodeTag, function ($attrs) use ($wizardBlockFactory) {
             $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : [])->getParams();
-
             $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
 
-            return $this->_trigger('eddbk_wizard_main_component', $attrs)->getParam('content');
+            $wizardBlock = $wizardBlockFactory->make([
+                'attributes' => $attrs,
+            ]);
+
+            return $wizardBlock->render();
         });
-
-        $this->_attach('wp_enqueue_scripts', function () {
-            if (!$this->_shouldRenderShortcodeContent()) {
-                return;
-            }
-            $this->_trigger('eddbk_wizard_enqueue_assets');
-            $this->_trigger('eddbk_wizard_enqueue_app_state');
-        }, 999);
-
-        $this->_attach('wp_footer', function () {
-            if (!$this->_shouldRenderShortcodeContent()) {
-                return;
-            }
-            echo $this->_trigger('eddbk_wizard_components_templates', [
-                'content' => '',
-            ])->getParam('content');
-        });
-    }
-
-    /**
-     * Check that shortcode's content should be rendered.
-     *
-     * @since [*next-version*]
-     *
-     * @return bool Is shortcode's content should be rendered.
-     */
-    protected function _shouldRenderShortcodeContent()
-    {
-        $post = get_post();
-
-        return $post instanceof WP_Post && has_shortcode($post->post_content, $this->shortcodeTag);
     }
 }
