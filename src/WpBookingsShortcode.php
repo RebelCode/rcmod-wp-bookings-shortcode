@@ -94,7 +94,9 @@ class WpBookingsShortcode extends AbstractBaseModule
             $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
 
             $wizardBlock = $wizardBlockFactory->make([
-                'attributes' => $attrs,
+                'context' => [
+                    'config' => $attrs,
+                ],
             ]);
 
             return $wizardBlock->render();
