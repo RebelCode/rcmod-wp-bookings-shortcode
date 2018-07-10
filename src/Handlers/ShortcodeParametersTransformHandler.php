@@ -51,7 +51,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @var int|string|Stringable|float
+     * @var int
      */
     protected $cartPageId;
 
@@ -94,7 +94,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      */
     public function __construct($cartPageId, $serviceSelectResourceModel, $expressionBuilder, $serviceTransformer)
     {
-        $this->cartPageId                 = $cartPageId;
+        $this->cartPageId                 = $this->_normalizeInt($cartPageId);
         $this->serviceSelectResourceModel = $serviceSelectResourceModel;
         $this->expressionBuilder          = $expressionBuilder;
         $this->serviceTransformer         = $serviceTransformer;
@@ -152,12 +152,11 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      */
     protected function _getRedirectUrl()
     {
-        $pageId  = $this->_normalizeInt($this->cartPageId);
-        $pageUrl = get_permalink($pageId);
+        $pageUrl = get_permalink($this->cartPageId);
 
         if (!$pageUrl) {
             throw $this->_createRuntimeException(
-                $this->__('Page post with ID "%1$d" does not exist.', [$pageId])
+                $this->__('Page post with ID "%1$d" does not exist.', [$this->cartPageId])
             );
         }
 
@@ -185,9 +184,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
         );
 
         $services = $this->serviceSelectResourceModel->select($condition);
-
-        reset($services);
-        $service = current($services);
+        $service  = reset($services);
 
         return $service ? $this->_normalizeIterable($this->serviceTransformer->transform($service)) : null;
     }
