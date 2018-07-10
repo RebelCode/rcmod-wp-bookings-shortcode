@@ -8,7 +8,9 @@ use Dhii\Invocation\InvocableInterface;
 use Dhii\Storage\Resource\SelectCapableInterface;
 use Dhii\Transformer\TransformerInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
+use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\EventManager\EventInterface;
 use RebelCode\Expression\Builder\ExpressionBuilderInterface;
 use stdClass;
@@ -33,12 +35,15 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
     /* @since [*next-version*] */
     use NormalizeIterableCapableTrait;
 
+    /* @since [*next-version*] */
+    use NormalizeIntCapableTrait;
+
     /**
      * Cart page ID.
      *
      * @since [*next-version*]
      *
-     * @var int
+     * @var int|string|Stringable|float
      */
     protected $cartPageId;
 
@@ -74,10 +79,10 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param int                        $cartPageId                 Cart page ID.
-     * @param SelectCapableInterface     $serviceSelectResourceModel Resource model for selecting services.
-     * @param ExpressionBuilderInterface $expressionBuilder          Expression builder.
-     * @param TransformerInterface       $serviceTransformer         Service transformer.
+     * @param int|string|Stringable|float $cartPageId                 Cart page ID.
+     * @param SelectCapableInterface      $serviceSelectResourceModel Resource model for selecting services.
+     * @param ExpressionBuilderInterface  $expressionBuilder          Expression builder.
+     * @param TransformerInterface        $serviceTransformer         Service transformer.
      */
     public function __construct($cartPageId, $serviceSelectResourceModel, $expressionBuilder, $serviceTransformer)
     {
@@ -131,7 +136,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
     }
 
     /**
-     * Get cart URL on which customer will be redirected after successfull booking creation.
+     * Get cart URL on which customer will be redirected after successful booking creation.
      *
      * @since [*next-version*]
      *
@@ -139,7 +144,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      */
     protected function _getRedirectUrl()
     {
-        return get_permalink($this->cartPageId);
+        return get_permalink($this->_normalizeInt($this->cartPageId));
     }
 
     /**
