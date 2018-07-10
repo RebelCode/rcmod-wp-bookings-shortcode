@@ -2,14 +2,16 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
+use Dhii\Collection\MapInterface;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Storage\Resource\SelectCapableInterface;
 use Dhii\Transformer\TransformerInterface;
+use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
+use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Psr\EventManager\EventInterface;
 use RebelCode\Expression\Builder\ExpressionBuilderInterface;
-use stdClass;
 
 /**
  * Handler for transforming shortcode parameters in format required by the front ui application.
@@ -23,6 +25,12 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use CreateInvalidArgumentExceptionCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeArrayCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeIterableCapableTrait;
 
     /**
      * Cart page ID.
@@ -114,7 +122,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
             $service = $this->_getService((int) $params['service']);
             unset($params['service']);
             if ($service) {
-                $params['service'] = $service;
+                $params['service'] = $this->_normalizeArray($service);
             }
         }
 
@@ -140,7 +148,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @param int $serviceId Service ID.
      *
-     * @return stdClass|null Service data if service is found.
+     * @return MapInterface|null Service data if service is found.
      */
     protected function _getService($serviceId)
     {
@@ -154,6 +162,6 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
         );
         $services = $this->serviceSelectResourceModel->select($condition);
 
-        return isset($services[0]) ? $this->serviceTransformer->transform($services[0]) : null;
+        return isset($services[0]) ? $this->_normalizeIterable($this->serviceTransformer->transform($services[0])) : null;
     }
 }
