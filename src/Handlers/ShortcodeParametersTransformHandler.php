@@ -3,6 +3,7 @@
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
+use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Storage\Resource\SelectCapableInterface;
@@ -10,6 +11,7 @@ use Dhii\Transformer\TransformerInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIntCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
+use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\EventManager\EventInterface;
 use RebelCode\Expression\Builder\ExpressionBuilderInterface;
@@ -37,6 +39,12 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
 
     /* @since [*next-version*] */
     use NormalizeIntCapableTrait;
+
+    /* @since [*next-version*] */
+    use NormalizeStringCapableTrait;
+
+    /* @since [*next-version*] */
+    use CreateRuntimeExceptionCapableTrait;
 
     /**
      * Cart page ID.
@@ -144,7 +152,16 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      */
     protected function _getRedirectUrl()
     {
-        return get_permalink($this->_normalizeInt($this->cartPageId));
+        $pageId  = $this->_normalizeInt($this->cartPageId);
+        $pageUrl = get_permalink($pageId);
+
+        if (!$pageUrl) {
+            throw $this->_createRuntimeException(
+                $this->__('Page post with ID "%1$d" does not exist.', [$pageId])
+            );
+        }
+
+        return $pageUrl;
     }
 
     /**
@@ -166,8 +183,12 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
                 $b->lit($serviceId)
             )
         );
+
         $services = $this->serviceSelectResourceModel->select($condition);
 
-        return isset($services[0]) ? $this->_normalizeIterable($this->serviceTransformer->transform($services[0])) : null;
+        reset($services);
+        $service = current($services);
+
+        return $service ? $this->_normalizeIterable($this->serviceTransformer->transform($service)) : null;
     }
 }
