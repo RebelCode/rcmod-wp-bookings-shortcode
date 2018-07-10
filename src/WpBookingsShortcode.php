@@ -62,11 +62,11 @@ class WpBookingsShortcode extends AbstractBaseModule
     {
         return $this->_setupContainer($this->_loadPhpConfigFile(RC_WP_BOOKINGS_SHORTCODE_MODULE_CONFIG), [
             /*
-             * Transform shortcode parameters before sending them to client.
+             * Transform shortcode parameters before sending them to the wizard.
              *
              * @since [*next-version*]
              */
-            'eddbk_shortcode_parameters_transform_handler' => function (ContainerInterface $c) {
+            'eddbk_shortcode_wizard_parameters_transform_handler' => function (ContainerInterface $c) {
                 return new ShortcodeParametersTransformHandler(
                     $c->get('eddbk_shortcode/edd_settings/purchase_page'),
                     $c->get('eddbk_services_select_rm'),
@@ -87,11 +87,11 @@ class WpBookingsShortcode extends AbstractBaseModule
         $this->shortcodeTag = $c->get('eddbk_shortcode/shortcode_tag');
         $wizardBlockFactory = $c->get('eddbk_wizard_block_factory');
 
-        $this->_attach('eddbk_shortcode_parameters_transform', $c->get('eddbk_shortcode_parameters_transform_handler'));
+        $this->_attach('eddbk_shortcode_wizard_parameters_transform', $c->get('eddbk_shortcode_wizard_parameters_transform_handler'));
 
         add_shortcode($this->shortcodeTag, function ($attrs) use ($wizardBlockFactory) {
             $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : [])->getParams();
-            $attrs = $this->_trigger('eddbk_shortcode_parameters_transform', $attrs)->getParams();
+            $attrs = $this->_trigger('eddbk_shortcode_wizard_parameters_transform', $attrs)->getParams();
 
             $wizardBlock = $wizardBlockFactory->make([
                 'context' => [
