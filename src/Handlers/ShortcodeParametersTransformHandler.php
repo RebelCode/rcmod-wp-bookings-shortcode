@@ -116,9 +116,9 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param $params
+     * @param array $params List of shortcode parameters.
      *
-     * @return array
+     * @return array Prepared parameters for wizard.
      */
     protected function _handleParameters($params = [])
     {
