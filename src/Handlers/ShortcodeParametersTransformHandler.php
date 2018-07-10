@@ -2,7 +2,6 @@
 
 namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
-use Dhii\Collection\MapInterface;
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
@@ -12,6 +11,8 @@ use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Psr\EventManager\EventInterface;
 use RebelCode\Expression\Builder\ExpressionBuilderInterface;
+use stdClass;
+use Traversable;
 
 /**
  * Handler for transforming shortcode parameters in format required by the front ui application.
@@ -148,7 +149,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @param int $serviceId Service ID.
      *
-     * @return MapInterface|null Service data if service is found.
+     * @return array|stdClass|Traversable|null Service data if service is found.
      */
     protected function _getService($serviceId)
     {
