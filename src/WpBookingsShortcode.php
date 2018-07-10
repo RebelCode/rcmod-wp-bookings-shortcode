@@ -95,7 +95,7 @@ class WpBookingsShortcode extends AbstractBaseModule
 
             $wizardBlock = $wizardBlockFactory->make([
                 'context' => [
-                    'config' => $attrs,
+                    'config' => json_encode($attrs),
                 ],
             ]);
 
