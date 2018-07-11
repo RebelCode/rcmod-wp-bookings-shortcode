@@ -154,7 +154,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
     {
         $pageUrl = get_permalink($this->cartPageId);
 
-        if (!$pageUrl) {
+        if ($pageUrl === false) {
             throw $this->_createRuntimeException(
                 $this->__('Page post with ID "%1$d" does not exist.', [$this->cartPageId])
             );
