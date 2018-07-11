@@ -173,7 +173,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @param int $serviceId Service ID.
      *
-     * @return array|stdClass|Traversable|null Service data if service is found.
+     * @return array|stdClass|Traversable|null Service data if service is found, `null` if service is not found.
      */
     protected function _getService($serviceId)
     {
