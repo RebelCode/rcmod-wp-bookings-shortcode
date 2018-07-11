@@ -4,6 +4,7 @@ namespace RebelCode\Bookings\WordPress\Module\Handlers;
 
 use Dhii\Exception\CreateInvalidArgumentExceptionCapableTrait;
 use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
+use Dhii\Exception\RuntimeException;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
 use Dhii\Storage\Resource\SelectCapableInterface;
@@ -147,6 +148,8 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      * Get cart URL on which customer will be redirected after successful booking creation.
      *
      * @since [*next-version*]
+     *
+     * @throws RuntimeException If page post with cart page id doesn't exist.
      *
      * @return string Cart URL to redirect user on.
      */
