@@ -86,16 +86,18 @@ class WpBookingsShortcode extends AbstractBaseModule
     {
         $this->shortcodeTag = $c->get('eddbk_shortcode/shortcode_tag');
         $wizardBlockFactory = $c->get('eddbk_wizard_block_factory');
+        $settingsContainer  = $c->get('eddbk_settings_container');
 
         $this->_attach('eddbk_shortcode_wizard_parameters_transform', $c->get('eddbk_shortcode_wizard_parameters_transform_handler'));
 
-        add_shortcode($this->shortcodeTag, function ($attrs) use ($wizardBlockFactory) {
+        add_shortcode($this->shortcodeTag, function ($attrs) use ($wizardBlockFactory, $settingsContainer) {
             $attrs = $this->_trigger('eddbk_shortcode_parameters', $attrs ? $attrs : [])->getParams();
             $attrs = $this->_trigger('eddbk_shortcode_wizard_parameters_transform', $attrs)->getParams();
 
             $wizardBlock = $wizardBlockFactory->make([
                 'context' => [
                     'config' => json_encode($attrs),
+                    'color'  => $settingsContainer->get('booking_wizard_color'),
                 ],
             ]);
 
