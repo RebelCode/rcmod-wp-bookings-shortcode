@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Fixed
+- Fixed missing support for "Week Starts On" setting.
 
 ## [0.1-alpha3] - 2018-07-14
 ### Added
