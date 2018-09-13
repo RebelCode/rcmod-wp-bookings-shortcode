@@ -7,5 +7,3 @@
 [![Latest Unstable Version](https://poser.pugx.org/rebelcode/rcmod-wp-bookings-shortcode/v/unstable)](https://packagist.org/packages/rebelcode/rcmod-wp-bookings-shortcode)
 
 Shortcode for booking widget output
-
-[Dhii]: https://github.com/Dhii/dhii
