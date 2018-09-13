@@ -98,6 +98,7 @@ class WpBookingsShortcode extends AbstractBaseModule
                 'context' => [
                     'config' => json_encode($attrs),
                     'color'  => $settingsContainer->get('booking_wizard_color'),
+                    'weekStartsOn' => $settingsContainer->get('week_starts_on'),
                 ],
             ]);
 
