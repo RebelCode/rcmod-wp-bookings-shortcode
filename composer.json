@@ -20,13 +20,12 @@
         "ptrofimov/xpmock": "^1.1",
         "dhii/php-cs-fixer-config": "^0.1",
         "codeclimate/php-test-reporter": "<=0.3.2",
-        "dhii/cqrs-resource-model-interface": "0.1-alpha2",
-        "dhii/expression-interface": "^0.2",
         "dhii/transformer-interface": "^0.1-alpha1",
         "rebelcode/rcmod-eddbk-services": "0.1-alpha3",
         "rebelcode/rcmod-wp-cqrs": "0.1-alpha2",
         "rebelcode/rcmod-wp-bookings-ui": "0.1-alpha12",
-        "rebelcode/rcmod-wp-bookings-front-ui": "0.1-alpha9"
+        "rebelcode/rcmod-wp-bookings-front-ui": "0.1-alpha9",
+        "rebelcode/entity-manager-interface": "^0.1-alpha"
     },
     "autoload": {
         "psr-4": {
