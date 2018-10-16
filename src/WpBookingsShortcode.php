@@ -69,8 +69,7 @@ class WpBookingsShortcode extends AbstractBaseModule
             'eddbk_shortcode_wizard_parameters_transform_handler' => function (ContainerInterface $c) {
                 return new ShortcodeParametersTransformHandler(
                     $c->get('eddbk_shortcode/edd_settings/purchase_page'),
-                    $c->get('eddbk_services_select_rm'),
-                    $c->get('sql_expression_builder'),
+                    $c->get('eddbk_services_manager'),
                     $c->get('eddbk_admin_edit_services_ui_state_transformer')
                 );
             },
@@ -96,8 +95,8 @@ class WpBookingsShortcode extends AbstractBaseModule
 
             $wizardBlock = $wizardBlockFactory->make([
                 'context' => [
-                    'config' => json_encode($attrs),
-                    'color'  => $settingsContainer->get('booking_wizard_color'),
+                    'config'       => json_encode($attrs),
+                    'color'        => $settingsContainer->get('booking_wizard_color'),
                     'weekStartsOn' => $settingsContainer->get('week_starts_on'),
                 ],
             ]);

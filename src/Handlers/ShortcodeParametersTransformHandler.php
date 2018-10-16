@@ -7,7 +7,6 @@ use Dhii\Exception\CreateRuntimeExceptionCapableTrait;
 use Dhii\Exception\RuntimeException;
 use Dhii\I18n\StringTranslatingTrait;
 use Dhii\Invocation\InvocableInterface;
-use Dhii\Storage\Resource\SelectCapableInterface;
 use Dhii\Transformer\TransformerInterface;
 use Dhii\Util\Normalization\NormalizeArrayCapableTrait;
 use Dhii\Util\Normalization\NormalizeIntCapableTrait;
@@ -15,7 +14,7 @@ use Dhii\Util\Normalization\NormalizeIterableCapableTrait;
 use Dhii\Util\Normalization\NormalizeStringCapableTrait;
 use Dhii\Util\String\StringableInterface as Stringable;
 use Psr\EventManager\EventInterface;
-use RebelCode\Expression\Builder\ExpressionBuilderInterface;
+use RebelCode\Entity\EntityManagerInterface;
 use stdClass;
 use Traversable;
 
@@ -57,22 +56,13 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
     protected $cartPageId;
 
     /**
-     * Resource model for selecting services.
+     * Services entity manager.
      *
      * @since [*next-version*]
      *
-     * @var SelectCapableInterface
+     * @var EntityManagerInterface
      */
-    private $serviceSelectResourceModel;
-
-    /**
-     * Expression builder.
-     *
-     * @since [*next-version*]
-     *
-     * @var ExpressionBuilderInterface
-     */
-    private $expressionBuilder;
+    private $servicesEntityManager;
 
     /**
      * Service transformer.
@@ -88,17 +78,15 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      *
      * @since [*next-version*]
      *
-     * @param int|string|Stringable|float $cartPageId                 Cart page ID.
-     * @param SelectCapableInterface      $serviceSelectResourceModel Resource model for selecting services.
-     * @param ExpressionBuilderInterface  $expressionBuilder          Expression builder.
-     * @param TransformerInterface        $serviceTransformer         Service transformer.
+     * @param int|string|Stringable|float $cartPageId            Cart page ID.
+     * @param EntityManagerInterface      $servicesEntityManager Services entity manager.
+     * @param TransformerInterface        $serviceTransformer    Service transformer.
      */
-    public function __construct($cartPageId, $serviceSelectResourceModel, $expressionBuilder, $serviceTransformer)
+    public function __construct($cartPageId, $servicesEntityManager, $serviceTransformer)
     {
-        $this->cartPageId                 = $this->_normalizeInt($cartPageId);
-        $this->serviceSelectResourceModel = $serviceSelectResourceModel;
-        $this->expressionBuilder          = $expressionBuilder;
-        $this->serviceTransformer         = $serviceTransformer;
+        $this->cartPageId            = $this->_normalizeInt($cartPageId);
+        $this->servicesEntityManager = $servicesEntityManager;
+        $this->serviceTransformer    = $serviceTransformer;
     }
 
     /**
@@ -177,17 +165,7 @@ class ShortcodeParametersTransformHandler implements InvocableInterface
      */
     protected function _getService($serviceId)
     {
-        $b = $this->expressionBuilder;
-
-        $condition = $b->and(
-            $b->eq(
-                $b->ef('service', 'id'),
-                $b->lit($serviceId)
-            )
-        );
-
-        $services = $this->serviceSelectResourceModel->select($condition);
-        $service  = reset($services);
+        $service = $this->servicesEntityManager->get($serviceId);
 
         return $service ? $this->_normalizeIterable($this->serviceTransformer->transform($service)) : null;
     }
