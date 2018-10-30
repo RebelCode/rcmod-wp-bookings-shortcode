@@ -5,8 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+
+## [0.1-alpha5] - 2018-10-30
 ### Changed
-- Using the services entity manager to retrieve a service.
+- Using the services entity manager to retrieve services.
 
 ## [0.1-alpha4] - 2018-09-13
 ### Fixed
