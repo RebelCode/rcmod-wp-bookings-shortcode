@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [[*next-version*]] - YYYY-MM-DD
+### Changed
+- Updated usage of service transformer to use the one provided by the bookings UI module.
 
 ## [0.1-alpha5] - 2018-10-30
 ### Changed
