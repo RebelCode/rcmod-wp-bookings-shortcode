@@ -70,7 +70,7 @@ class WpBookingsShortcode extends AbstractBaseModule
                 return new ShortcodeParametersTransformHandler(
                     $c->get('eddbk_shortcode/edd_settings/purchase_page'),
                     $c->get('eddbk_services_manager'),
-                    $c->get('eddbk_admin_edit_services_ui_state_transformer')
+                    $c->get('eddbk_bookings_ui_service_transformer')
                 );
             },
         ]);
